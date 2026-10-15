@@ -34,7 +34,7 @@ def coerce(key, value):
     return str(value)
 
 
-def apply_layer(config, {k:v for k, v in os.environ.items() if k.startswith("APP_")}):
+def apply_layer(config, values):
     for raw_key, value in values.items():
         if value is None:
             continue
@@ -58,7 +58,7 @@ def effective_config(request: Request, set: list[str] = Query(default=[])):
             apply_layer(config, yaml.safe_load(f) or {})
 
     apply_layer(config, dotenv_values(BASE / ".env"))
-    apply_layer(config, os.environ)
+    apply_layer(config, {k:v for k, v in os.environ.items() if k.startswith("APP_")})
 
     # Repeated ?set=key=value parameters override all other layers.
     for item in set:
