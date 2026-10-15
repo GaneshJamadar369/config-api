@@ -34,7 +34,7 @@ def coerce(key, value):
     return str(value)
 
 
-def apply_layer(config, values):
+def apply_layer(config, {k:v for k, v in os.environ.items() if k.startswith("APP_")}):
     for raw_key, value in values.items():
         if value is None:
             continue
